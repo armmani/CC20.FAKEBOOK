@@ -1,0 +1,11 @@
+GET http://localhost:8472/api/auth/me HTTP/1.1
+
+###
+
+POST http://localhost:8472/api/post HTTP/1.1
+Content-Type: application/json
+
+{
+  "message2": "Hello2",
+  "messag2e": "Hello1"
+}
