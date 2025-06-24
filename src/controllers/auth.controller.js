@@ -1,3 +1,5 @@
+import prisma from "../config/prisma.config.js";
+
 export function register(req, res, next) {
   res.json({
     msg: "Register Controller",
@@ -12,8 +14,10 @@ export const login = (req, res, next) => {
   });
 };
 
-export const getMe = (req, res, next) => {
+export const getMe = async (req, res, next) => {
+  let numUser = await prisma.user.count();
+  console.log(numUser);
   res.json({
-    msg: "Get Me Controller",
+    msg: "Get Me Controller", numUser
   });
 };
