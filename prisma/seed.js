@@ -1,7 +1,7 @@
 import prisma from "../src/config/prisma.config.js";
 import bcrypt from "bcryptjs";
 
-const hashPassword = bcrypt.hashSync("123456", 10);
+const hashedPassword = bcrypt.hashSync("123456", 10);
 
 const userData = [
   {
@@ -36,11 +36,17 @@ const userData = [
   },
 ];
 
+const postData = [
+  { message: "haha1", userId: 2 },
+  { message: "haha2", userId: 4 },
+];
+
 async function seedDB() {
   await prisma.user.createMany({ data: userData, skipDuplicates: true });
+  await prisma.post.createMany({ data: postData, skipDuplicates: true });
 }
 
 seedDB()
   .then(console.log("Already SEED DB"))
   .catch(console.log)
-  .finally(prisma.$disconnect);
+  .finally(prisma.$disconnect());
