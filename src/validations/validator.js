@@ -1,8 +1,27 @@
 import { object, string, number, date, ref } from "yup";
-import createError from "../utils/create-error.util";
+import createError from "../utils/create-error.util.js";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const mobileRegex = /^[0-9]{10,15}$/;
+
+export const loginSchema = object({
+  identity: string().test(
+    "identity check",
+    "Identity must be a valid email or mobile number",
+    (value) => {
+      if (!value){ return true }
+      return emailRegex.test(value) || mobileRegex.test(value);
+    }
+  ),
+  password: string().min(4).required(),
+  email: string().email(),
+  mobile: string().matches(mobileRegex),
+}).transform((value) => {
+  return {
+    ...value,
+    [emailRegex.test(value.identity) ? "email" : "mobile"]: value.identity,
+  };
+}).noUnknown();
 
 export const registerSchema = object({
   firstName: string().required(),
@@ -47,24 +66,6 @@ export const registerSchema = object({
     }
   );
 
-let data = {
-  firstName: "Andy",
-  lastName: "Codecamp",
-  identity: "someone@ggg.mail",
-  email: "andy@ggg.mail",
-  mobile: "1234567899",
-  identity: "1234567890",
-  password: "123456",
-  confirmPassword: "123456",
-  status: "buy",
-};
-
-registerSchema
-  .validate(data, { abortEarly: false })
-  .then(console.log)
-  .catch((err) => {
-    console.log(err.errors);
-  });
 
 export const validate = (schema, options = {}) => {
   return async function (req, res, next) {
@@ -76,8 +77,9 @@ export const validate = (schema, options = {}) => {
       req.body = cleanBody;
       next();
     } catch (err) {
-      console.log(err.errors);
-      createError(400, err.errors);
+      let errMsg = err.errors.join("|||");
+      console.log(errMsg);
+      createError(400, errMsg);
     }
   };
 };
