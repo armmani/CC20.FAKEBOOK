@@ -1,4 +1,5 @@
 import prisma from "../config/prisma.config.js";
+import { createUser, getUserBy } from "../services/user.service.js";
 import checkIdentity from "../utils/check-identity.util.js";
 import createError from "../utils/create-error.util.js";
 import bcrypt from "bcryptjs";
@@ -60,15 +61,11 @@ export async function registerYup(req, res, next) {
     const { email, mobile, firstName, lastName, password } = req.body;
     // finding user
     if (email) {
-      let foundUserEmail = await prisma.user.findUnique({
-        where: { email: email },
-      });
+      let foundUserEmail = await getUserBy("email", email);
       if (foundUserEmail) createError(409, `${email} already existed`);
     }
     if (mobile) {
-      let foundUserMobile = await prisma.user.findUnique({
-        where: { mobile: mobile },
-      });
+      let foundUserMobile = await getUserBy("mobile", mobile);
       if (foundUserMobile) createError(409, `${mobile} already existed`);
     }
     const newUser = {
@@ -78,9 +75,10 @@ export async function registerYup(req, res, next) {
       firstName,
       lastName,
     };
-    const result = await prisma.user.create({ data: newUser });
+    // const result = await prisma.user.create({ data: newUser }); สร้าง user.service.js แล้ว ทำแทน
+    const result = await createUser(newUser);
 
-    res.json({ msg: "RegisterYup Successful" });
+    res.json({ msg: "RegisterYup Successful", result });
   } catch (err) {
     next(err);
   }
@@ -90,9 +88,11 @@ export const login = async (req, res, next) => {
   const { identity, password, email, mobile } = req.body;
   const identityKey = email ? "email" : "mobile";
 
-  const foundUser = await prisma.user.findUnique({
-    where: { [identityKey]: identity },
-  });
+  // const foundUser = await prisma.user.findUnique({
+  //   where: { [identityKey]: identity },
+  // });
+
+  const foundUser = await getUserBy(identityKey, identity);
   if (!foundUser) {
     createError(401, "Cannot Login");
   }
