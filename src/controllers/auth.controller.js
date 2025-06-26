@@ -107,18 +107,15 @@ export const login = async (req, res, next) => {
     expiresIn: "15d",
   });
 
+  const { password: pw, createdAt, updatedAt, ...userData } = foundUser; // ในปีกกาคือ destructure เพื่อไม่ให้แสดงส่่วนที่ไม่ต้องการ คืออันก่อน ...
+
   res.json({
     msg: "Login Successful",
     token: token,
+    user: userData,
   });
 };
 
 export const getMe = async (req, res, next) => {
-  let numUser = await prisma.user.count();
-  console.log(numUser);
-  createError(403, "Block !!!");
-  res.json({
-    msg: "Get Me Controller",
-    numUser,
-  });
+  res.json({ user: req.user });
 };
