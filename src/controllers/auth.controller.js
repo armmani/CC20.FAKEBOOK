@@ -76,9 +76,9 @@ export async function registerYup(req, res, next) {
       lastName,
     };
     // const result = await prisma.user.create({ data: newUser }); สร้าง user.service.js แล้ว ทำแทน
-    const result = await createUser(newUser);
+    await createUser(newUser);
 
-    res.json({ msg: "RegisterYup Successful", result });
+    res.json({ message: "RegisterYup Successful"});
   } catch (err) {
     next(err);
   }
@@ -110,7 +110,7 @@ export const login = async (req, res, next) => {
   const { password: pw, createdAt, updatedAt, ...userData } = foundUser; // ในปีกกาคือ destructure เพื่อไม่ให้แสดงส่่วนที่ไม่ต้องการ คืออันก่อน ...
 
   res.json({
-    msg: "Login Successful",
+    message: "Login Successful",
     token: token,
     user: userData,
   });

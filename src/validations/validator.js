@@ -37,7 +37,7 @@ export const registerSchema = object({
     }
   ),
   password: string().min(4).required(),
-  confirmPassword: string().oneOf(
+  confirmPassword: string().required().oneOf(
     [ref("password")],
     `confirmPassword must match password`
   ),
