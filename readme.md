@@ -1,10 +1,15 @@
 ## CC20-Fakebook-API
 
 ### env guide
-PORT = 8472  
-DATABASE_URL = ""  
+PORT = 8472
+
+DATABASE_URL = ""
+
 JWT_SECRET = "8888"
 
+CLOUDINARY_URL=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ---
 ### service
 

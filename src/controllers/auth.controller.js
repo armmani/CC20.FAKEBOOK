@@ -105,6 +105,7 @@ export const login = async (req, res, next) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
     algorithm: "HS256",
     expiresIn: "15d",
+    // expiresIn: "1m",
   });
 
   const { password: pw, createdAt, updatedAt, ...userData } = foundUser; // ในปีกกาคือ destructure เพื่อไม่ให้แสดงส่่วนที่ไม่ต้องการ คืออันก่อน ...
