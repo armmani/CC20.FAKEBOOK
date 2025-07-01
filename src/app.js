@@ -5,6 +5,8 @@ import errorMiddleware from "./middlewares/error.middleware.js";
 import cors from "cors";
 import postRoute from "./routes/post.route.js";
 import authenticateMiddleware from "./middlewares/authenticate.middleware.js";
+import likeRoute from "./routes/like.route.js";
+import commentRoute from "./routes/comment.route.js";
 
 const app = express();
 app.use(
@@ -16,8 +18,8 @@ app.use(express.json());
 
 app.use("/api/auth", authRoute);
 app.use("/api/post",authenticateMiddleware, postRoute);
-app.use("/api/comment", (req, res) => res.send("comment Service"));
-app.use("/api/like", (req, res) => res.send("like Service"));
+app.use("/api/comment", authenticateMiddleware, commentRoute);
+app.use("/api/like", authenticateMiddleware, likeRoute);
 
 app.use(notFoundMiddleware);
 
